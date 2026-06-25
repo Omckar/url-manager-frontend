@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-center min-vh-100 px-3 py-5">
-  <div class="card card-premium shadow border-0 p-4 p-md-5 w-100" style="max-width: 480px; background: rgba(255, 255, 255, 0.95);">
+  <div class="card card-premium shadow border-0 p-4 p-md-5 w-100" style="max-width: 480px;">
     <div class="text-center mb-4">
       <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 text-white mb-3" style="width: 50px; height: 50px; background: var(--primary-gradient) !important;">
         <i class="bi bi-link-45deg fs-2"></i>
@@ -18,7 +18,7 @@
       <div class="mb-3">
         <label for="email" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Email Address</label>
         <div class="input-group">
-          <span class="input-group-text bg-white border-end-0 border-light"><i class="bi bi-envelope text-muted"></i></span>
+          <span class="input-group-text"><i class="bi bi-envelope text-muted"></i></span>
           <input type="email" id="email" formControlName="email" class="form-control form-control-premium border-start-0 ps-1" placeholder="name@company.com" [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
         </div>
         <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
@@ -31,7 +31,7 @@
       <div class="mb-4">
         <label for="password" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Password</label>
         <div class="input-group">
-          <span class="input-group-text bg-white border-end-0 border-light"><i class="bi bi-lock text-muted"></i></span>
+          <span class="input-group-text"><i class="bi bi-lock text-muted"></i></span>
           <input type="password" id="password" formControlName="password" class="form-control form-control-premium border-start-0 ps-1" placeholder="••••••••" [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
         </div>
         <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
