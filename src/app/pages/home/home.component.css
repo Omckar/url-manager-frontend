@@ -3,7 +3,7 @@
 .landing-page {
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   color: var(--text-main);
@@ -62,6 +62,9 @@
 
 /* Premium Navbar */
 .navbar-premium {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
