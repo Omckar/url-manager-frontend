@@ -1,0 +1,339 @@
+<!-- Page Container -->
+<div class="landing-page">
+  <!-- Glowing Background Orbs -->
+  <div class="bg-glow orb-1"></div>
+  <div class="bg-glow orb-2"></div>
+  <div class="bg-glow orb-3"></div>
+
+  <!-- Header Navigation -->
+  <header class="navbar-premium sticky-top">
+    <div class="container d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/" class="navbar-brand-custom d-flex align-items-center text-decoration-none">
+        <div class="brand-logo me-2">
+          <i class="bi bi-link-45deg"></i>
+        </div>
+        <span class="brand-text brand-font">SnapLink</span>
+      </a>
+
+      <!-- Navigation Links (Desktop) -->
+      <nav class="d-none d-md-flex align-items-center gap-4">
+        <a href="#features" class="nav-link-custom">Features</a>
+        <a href="#showcase" class="nav-link-custom">Showcase</a>
+        <a href="#analytics" class="nav-link-custom">Analytics</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Theme Toggle -->
+        <button (click)="themeService.toggleTheme()" class="btn-theme-toggle" aria-label="Toggle Theme" id="themeToggleBtn">
+          <i class="bi" [class.bi-sun]="themeService.theme() === 'dark'" [class.bi-moon-stars]="themeService.theme() === 'light'"></i>
+        </button>
+
+        <ng-container *ngIf="authService.isAuthenticated(); else authButtons">
+          <a routerLink="/dashboard" class="btn-primary-premium text-decoration-none">Dashboard</a>
+          <button (click)="authService.logout()" class="btn-outline-premium">Logout</button>
+        </ng-container>
+        <ng-template #authButtons>
+          <a routerLink="/auth/login" class="nav-link-custom text-decoration-none">Sign In</a>
+          <a routerLink="/auth/register" class="btn-primary-premium text-decoration-none">Get Started</a>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section container text-center">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="badge-premium mb-3">
+          <span>Introducing SnapLink 2.0</span>
+        </div>
+        <h1 class="hero-title">
+          Links with <span class="gradient-text">Superpowers</span>
+        </h1>
+        <p class="hero-subtitle">
+          SnapLink is a premium, full-stack URL shortening and tracking platform. Optimize your links, protect them with passwords, download custom QR codes, and trace every single click with real-time analytics.
+        </p>
+
+        <!-- Interactive Shortening Simulator -->
+        <div class="simulator-wrapper mx-auto mt-5">
+          <div class="card-premium p-4 p-md-5 text-start">
+            <h3 class="card-title h5 mb-3 d-flex align-items-center">
+              <i class="bi bi-magic text-primary-gradient me-2"></i> Try it out instantly
+            </h3>
+            
+            <div class="input-group-premium" [class.d-none]="mockShortenedUrl">
+              <div class="input-icon">
+                <i class="bi bi-globe"></i>
+              </div>
+              <input 
+                #urlInput 
+                type="text" 
+                placeholder="Paste your long link here (e.g. https://google.com)" 
+                class="form-control-premium"
+                (keyup.enter)="onShortenMock(urlInput)"
+              >
+              <button (click)="onShortenMock(urlInput)" class="btn-shorten-premium">
+                <span>Shorten Link</span>
+                <i class="bi bi-arrow-right-short ms-1"></i>
+              </button>
+            </div>
+
+            <!-- Shorten Result Display -->
+            <div class="result-box mt-2" *ngIf="mockShortenedUrl">
+              <div class="d-flex align-items-center justify-content-between p-3 rounded-premium bg-glass-inner">
+                <div class="text-truncate me-2">
+                  <small class="d-block text-muted text-uppercase font-monospace" style="font-size: 0.65rem;">Short Link</small>
+                  <a [href]="mockShortenedUrl" target="_blank" class="short-link-result text-decoration-none fw-bold">{{ mockShortenedUrl }}</a>
+                </div>
+                <div class="d-flex gap-2">
+                  <button (click)="copyMockLink()" class="btn-copy-mock" [class.copied]="copied">
+                    <i class="bi" [class.bi-check-lg]="copied" [class.bi-copy]="!copied"></i>
+                    <span>{{ copied ? 'Copied!' : 'Copy' }}</span>
+                  </button>
+                  <button (click)="resetDemo(urlInput)" class="btn-reset-mock">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Signup Prompt Block -->
+              <div class="prompt-box mt-3 p-3 rounded-premium border-glow-purple bg-gradient-purple-dark text-white" *ngIf="showRegisterPrompt">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="prompt-icon">
+                    <i class="bi bi-shield-check"></i>
+                  </div>
+                  <div>
+                    <h4 class="h6 mb-1 fw-bold text-white">Unlock Live Analytics & Password Protection</h4>
+                    <p class="mb-2 text-white-50 small">
+                      This is a preview link. Register for free to unlock geo-tracking, device splits, expiry logs, dynamic custom aliases, and download vector QR codes!
+                    </p>
+                    <a routerLink="/auth/register" class="btn-signup-now">
+                      Create Free Account <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid Section -->
+  <section class="features-section py-5 my-5" id="features">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Designed for modern marketing teams</h2>
+        <p class="section-subtitle">Everything you need to distribute, secure, and monitor your web traffic.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card-premium h-100 p-4">
+            <div class="feature-icon bg-gradient-blue mb-3">
+              <i class="bi bi-link-45deg"></i>
+            </div>
+            <h3 class="feature-title h5">Base62 Encoding</h3>
+            <p class="feature-text text-muted small">
+              Compress lengthy URLs into highly optimized base62 short strings, making links clean, readable, and perfect for social media bios.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card-premium h-100 p-4">
+            <div class="feature-icon bg-gradient-purple mb-3">
+              <i class="bi bi-bar-chart-line"></i>
+            </div>
+            <h3 class="feature-title h5">Real-time Metrics</h3>
+            <p class="feature-text text-muted small">
+              Track referrers, browser clients, device operating systems, and IP logs automatically on a reactive glassmorphic control center.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card-premium h-100 p-4">
+            <div class="feature-icon bg-gradient-green mb-3">
+              <i class="bi bi-qr-code"></i>
+            </div>
+            <h3 class="feature-title h5">Dynamic QR Codes</h3>
+            <p class="feature-text text-muted small">
+              Generate QR codes with a single click. Download and embed vector codes in emails, offline print media, or flyers.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card-premium h-100 p-4">
+            <div class="feature-icon bg-gradient-red mb-3">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+            <h3 class="feature-title h5">Access Shields</h3>
+            <p class="feature-text text-muted small">
+              Deactivate links instantly, set automated calendar expiry dates, or shield private content with SHA-256 password gates.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Mockup Section -->
+  <section class="showcase-section py-5 my-5 bg-gradient-glow-inner" id="showcase">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="badge-premium mb-3">
+            <span>Visual Analytics</span>
+          </div>
+          <h2 class="showcase-heading mb-4">Deep insights on every campaign click</h2>
+          <p class="showcase-desc text-muted mb-4">
+            See exactly who is accessing your links. We process visitor headers dynamically to aggregate beautiful charts showing OS splits, device profiles, browser configurations, and click volumes over time.
+          </p>
+          
+          <ul class="showcase-list list-unstyled d-flex flex-column gap-3 mb-4">
+            <li class="d-flex align-items-center">
+              <i class="bi bi-check-circle-fill text-success me-3"></i>
+              <span>Identify top-performing referral channels</span>
+            </li>
+            <li class="d-flex align-items-center">
+              <i class="bi bi-check-circle-fill text-success me-3"></i>
+              <span>Filter logs by dates and search terms</span>
+            </li>
+            <li class="d-flex align-items-center">
+              <i class="bi bi-check-circle-fill text-success me-3"></i>
+              <span>100% compliant tracking and reporting</span>
+            </li>
+          </ul>
+
+          <a routerLink="/auth/register" class="btn-primary-premium text-decoration-none">
+            Get Analytics Access <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+
+        <!-- High-fidelity Mockup UI -->
+        <div class="col-lg-6" id="analytics">
+          <div class="card-premium p-4 shadow-lg mockup-dashboard">
+            <!-- Header bar -->
+            <div class="d-flex justify-content-between align-items-center border-bottom border-card-inner pb-3 mb-3">
+              <div>
+                <span class="d-block text-muted small font-monospace text-uppercase" style="font-size: 0.6rem;">Active Link Link</span>
+                <span class="fw-bold text-main" style="font-size: 0.95rem;">snaplink_summer_promo</span>
+              </div>
+              <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1 small">
+                <span class="spinner-grow spinner-grow-sm text-success me-1" style="width: 6px; height: 6px;"></span> Active
+              </span>
+            </div>
+
+            <!-- Mock KPI row -->
+            <div class="row g-3 mb-4">
+              <div class="col-6">
+                <div class="p-3 bg-glass-inner rounded-premium">
+                  <small class="text-muted d-block mb-1" style="font-size: 0.7rem;">Total Clicks</small>
+                  <span class="h4 fw-bold font-heading text-primary-gradient mb-0">12,480</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-3 bg-glass-inner rounded-premium">
+                  <small class="text-muted d-block mb-1" style="font-size: 0.7rem;">Password Guard</small>
+                  <span class="h4 fw-bold font-heading text-warning mb-0">Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Device Split Mock Progress -->
+            <div class="mb-4">
+              <h4 class="h6 mb-3 fw-bold">Visitor Devices</h4>
+              
+              <div class="d-flex flex-column gap-2.5">
+                <div>
+                  <div class="d-flex justify-content-between text-muted small mb-1" style="font-size: 0.75rem;">
+                    <span>Mobile Phones</span>
+                    <span class="fw-bold">64%</span>
+                  </div>
+                  <div class="progress-premium">
+                    <div class="progress-bar-premium bg-gradient-purple" style="width: 64%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="d-flex justify-content-between text-muted small mb-1" style="font-size: 0.75rem;">
+                    <span>Desktops & Laptops</span>
+                    <span class="fw-bold">30%</span>
+                  </div>
+                  <div class="progress-premium">
+                    <div class="progress-bar-premium bg-gradient-blue" style="width: 30%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="d-flex justify-content-between text-muted small mb-1" style="font-size: 0.75rem;">
+                    <span>Tablets</span>
+                    <span class="fw-bold">6%</span>
+                  </div>
+                  <div class="progress-premium">
+                    <div class="progress-bar-premium bg-gradient-green" style="width: 6%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Browser Split Mock -->
+            <div>
+              <h4 class="h6 mb-3 fw-bold">Top Browsers</h4>
+              <div class="d-flex justify-content-between align-items-center gap-3">
+                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
+                  <i class="bi bi-browser-chrome d-block fs-4 text-primary mb-1"></i>
+                  <span class="fw-bold small d-block">Chrome</span>
+                  <span class="text-muted small" style="font-size: 0.7rem;">54%</span>
+                </div>
+                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
+                  <i class="bi bi-browser-safari d-block fs-4 text-info mb-1"></i>
+                  <span class="fw-bold small d-block">Safari</span>
+                  <span class="text-muted small" style="font-size: 0.7rem;">32%</span>
+                </div>
+                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
+                  <i class="bi bi-browser-firefox d-block fs-4 text-warning mb-1"></i>
+                  <span class="fw-bold small d-block">Firefox</span>
+                  <span class="text-muted small" style="font-size: 0.7rem;">14%</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA section -->
+  <section class="cta-section py-5 my-5 container">
+    <div class="card-premium p-5 text-center bg-gradient-card border-glow-purple">
+      <h2 class="h1 font-heading text-white mb-3">Scale your audience outreach today</h2>
+      <p class="text-white-50 max-width-600 mx-auto mb-4">
+        Join users optimizing link workflows, generating custom code, and collecting deep analytics insights.
+      </p>
+      <a routerLink="/auth/register" class="btn-primary-premium btn-lg-premium text-decoration-none">
+        Get Started Now - It's Free
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer with user name -->
+  <footer class="footer-premium border-top border-card-inner py-5 mt-5">
+    <div class="container text-center">
+      <p class="text-muted small mb-3">&copy; 2026 SnapLink. All rights reserved.</p>
+      <!-- REQUIRED CREATOR BADGE -->
+      <div class="creator-badge">
+        <span>Omckar Badekaar made with love</span>
+      </div>
+    </div>
+  </footer>
+</div>

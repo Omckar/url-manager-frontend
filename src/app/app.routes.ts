@@ -8,6 +8,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { UnlockComponent } from './pages/unlock/unlock.component';
 import { ExpiredComponent } from './pages/expired/expired.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './core/guards/auth.guard';
 import { noAuthGuard } from './core/guards/no-auth.guard';
 
@@ -16,6 +17,9 @@ export const routes: Routes = [
   { path: 'unlock/:shortCode', component: UnlockComponent },
   { path: 'expired', component: ExpiredComponent },
   { path: '404', component: NotFoundComponent },
+
+  // Public Landing Page
+  { path: '', component: HomeComponent, pathMatch: 'full' },
 
   // Guest Authentication pages
   { path: 'auth/login', component: LoginComponent, canActivate: [noAuthGuard] },
@@ -27,7 +31,6 @@ export const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'urls', component: UrlsComponent },
       { path: 'profile', component: ProfileComponent },
