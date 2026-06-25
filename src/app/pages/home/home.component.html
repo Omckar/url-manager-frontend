@@ -1,45 +1,67 @@
 <!-- Page Container -->
 <div class="landing-page">
-  <!-- Glowing Background Orbs -->
-  <div class="bg-glow orb-1"></div>
-  <div class="bg-glow orb-2"></div>
-  <div class="bg-glow orb-3"></div>
+  <!-- Glowing Background Orbs Container -->
+  <div class="bg-glow-container">
+    <div class="bg-glow orb-1"></div>
+    <div class="bg-glow orb-2"></div>
+    <div class="bg-glow orb-3"></div>
+  </div>
 
   <!-- Header Navigation -->
-  <header class="navbar-premium sticky-top">
-    <div class="container d-flex align-items-center justify-content-between py-3">
-      <a routerLink="/" class="navbar-brand-custom d-flex align-items-center text-decoration-none">
+  <nav class="navbar navbar-expand-md navbar-premium sticky-top">
+    <div class="container">
+      <a routerLink="/" class="navbar-brand d-flex align-items-center text-decoration-none">
         <div class="brand-logo me-2">
           <i class="bi bi-link-45deg"></i>
         </div>
-        <span class="brand-text brand-font">SnapLink</span>
+        <span class="brand-text brand-font" style="color: var(--text-main);">SnapLink</span>
       </a>
 
-      <!-- Navigation Links (Desktop) -->
-      <nav class="d-none d-md-flex align-items-center gap-4">
-        <a href="#features" class="nav-link-custom">Features</a>
-        <a href="#showcase" class="nav-link-custom">Showcase</a>
-        <a href="#analytics" class="nav-link-custom">Analytics</a>
-      </nav>
-
-      <!-- Action Buttons -->
-      <div class="d-flex align-items-center gap-3">
+      <!-- Mobile triggers row -->
+      <div class="d-flex align-items-center gap-2 ms-auto d-md-none">
         <!-- Theme Toggle -->
-        <button (click)="themeService.toggleTheme()" class="btn-theme-toggle" aria-label="Toggle Theme" id="themeToggleBtn">
+        <button (click)="themeService.toggleTheme()" class="btn-theme-toggle" aria-label="Toggle Theme" style="width: 36px; height: 36px; border-radius: 8px;">
           <i class="bi" [class.bi-sun]="themeService.theme() === 'dark'" [class.bi-moon-stars]="themeService.theme() === 'light'"></i>
         </button>
+        
+        <!-- Mobile Collapse Toggler -->
+        <button class="navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar" aria-controls="landingNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-3"></i>
+        </button>
+      </div>
 
-        <ng-container *ngIf="authService.isAuthenticated(); else authButtons">
-          <a routerLink="/dashboard" class="btn-primary-premium text-decoration-none">Dashboard</a>
-          <button (click)="authService.logout()" class="btn-outline-premium">Logout</button>
-        </ng-container>
-        <ng-template #authButtons>
-          <a routerLink="/auth/login" class="nav-link-custom text-decoration-none">Sign In</a>
-          <a routerLink="/auth/register" class="btn-primary-premium text-decoration-none">Get Started</a>
-        </ng-template>
+      <!-- Collapsible Content -->
+      <div class="collapse navbar-collapse" id="landingNavbar">
+        <ul class="navbar-nav mx-auto mb-3 mb-md-0 gap-2 gap-md-4 text-center mt-3 mt-md-0">
+          <li class="nav-item">
+            <a href="#features" class="nav-link-custom text-decoration-none" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Features</a>
+          </li>
+          <li class="nav-item">
+            <a href="#showcase" class="nav-link-custom text-decoration-none" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Showcase</a>
+          </li>
+          <li class="nav-item">
+            <a href="#analytics" class="nav-link-custom text-decoration-none" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Analytics</a>
+          </li>
+        </ul>
+
+        <div class="d-flex flex-column flex-md-row align-items-center gap-2.5 gap-md-3 justify-content-center mt-2 mt-md-0">
+          <!-- Desktop Theme Toggle -->
+          <button (click)="themeService.toggleTheme()" class="btn-theme-toggle d-none d-md-flex" aria-label="Toggle Theme">
+            <i class="bi" [class.bi-sun]="themeService.theme() === 'dark'" [class.bi-moon-stars]="themeService.theme() === 'light'"></i>
+          </button>
+
+          <ng-container *ngIf="authService.isAuthenticated(); else authButtons">
+            <a routerLink="/dashboard" class="btn-primary-premium text-decoration-none w-100 text-center" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Dashboard</a>
+            <button (click)="authService.logout()" class="btn-outline-premium w-100 text-center" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Logout</button>
+          </ng-container>
+          <ng-template #authButtons>
+            <a routerLink="/auth/login" class="nav-link-custom text-decoration-none py-2 w-100 text-center" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Sign In</a>
+            <a routerLink="/auth/register" class="btn-primary-premium text-decoration-none w-100 text-center" data-bs-toggle="collapse" data-bs-target="#landingNavbar.show">Get Started</a>
+          </ng-template>
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
   <!-- Hero Section -->
   <section class="hero-section container text-center">
@@ -62,18 +84,21 @@
               <i class="bi bi-magic text-primary-gradient me-2"></i> Try it out instantly
             </h3>
             
-            <div class="input-group-premium" [class.d-none]="mockShortenedUrl">
-              <div class="input-icon">
-                <i class="bi bi-globe"></i>
+            <div class="input-group-premium flex-column flex-sm-row align-items-stretch" [class.d-none]="mockShortenedUrl">
+              <div class="d-flex align-items-center flex-grow-1 bg-glass-input rounded-premium-sm px-2 mb-2 mb-sm-0">
+                <div class="input-icon me-1">
+                  <i class="bi bi-globe"></i>
+                </div>
+                <input 
+                  #urlInput 
+                  type="text" 
+                  placeholder="Paste your long link here..." 
+                  class="form-control-premium border-0"
+                  (keyup.enter)="onShortenMock(urlInput)"
+                  style="box-shadow: none !important; background: transparent !important;"
+                >
               </div>
-              <input 
-                #urlInput 
-                type="text" 
-                placeholder="Paste your long link here (e.g. https://google.com)" 
-                class="form-control-premium"
-                (keyup.enter)="onShortenMock(urlInput)"
-              >
-              <button (click)="onShortenMock(urlInput)" class="btn-shorten-premium">
+              <button (click)="onShortenMock(urlInput)" class="btn-shorten-premium justify-content-center">
                 <span>Shorten Link</span>
                 <i class="bi bi-arrow-right-short ms-1"></i>
               </button>
@@ -224,7 +249,7 @@
             <!-- Header bar -->
             <div class="d-flex justify-content-between align-items-center border-bottom border-card-inner pb-3 mb-3">
               <div>
-                <span class="d-block text-muted small font-monospace text-uppercase" style="font-size: 0.6rem;">Active Link Link</span>
+                <span class="d-block text-muted small font-monospace text-uppercase" style="font-size: 0.6rem;">Active Link</span>
                 <span class="fw-bold text-main" style="font-size: 0.95rem;">snaplink_summer_promo</span>
               </div>
               <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1 small">
@@ -288,21 +313,27 @@
             <!-- Browser Split Mock -->
             <div>
               <h4 class="h6 mb-3 fw-bold">Top Browsers</h4>
-              <div class="d-flex justify-content-between align-items-center gap-3">
-                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
-                  <i class="bi bi-browser-chrome d-block fs-4 text-primary mb-1"></i>
-                  <span class="fw-bold small d-block">Chrome</span>
-                  <span class="text-muted small" style="font-size: 0.7rem;">54%</span>
+              <div class="row g-2">
+                <div class="col-4">
+                  <div class="text-center p-2 bg-glass-inner rounded-premium h-100">
+                    <i class="bi bi-browser-chrome d-block fs-5 text-primary mb-1"></i>
+                    <span class="fw-bold small d-block" style="font-size: 0.75rem;">Chrome</span>
+                    <span class="text-muted small" style="font-size: 0.65rem;">54%</span>
+                  </div>
                 </div>
-                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
-                  <i class="bi bi-browser-safari d-block fs-4 text-info mb-1"></i>
-                  <span class="fw-bold small d-block">Safari</span>
-                  <span class="text-muted small" style="font-size: 0.7rem;">32%</span>
+                <div class="col-4">
+                  <div class="text-center p-2 bg-glass-inner rounded-premium h-100">
+                    <i class="bi bi-browser-safari d-block fs-5 text-info mb-1"></i>
+                    <span class="fw-bold small d-block" style="font-size: 0.75rem;">Safari</span>
+                    <span class="text-muted small" style="font-size: 0.65rem;">32%</span>
+                  </div>
                 </div>
-                <div class="text-center flex-grow-1 p-2 bg-glass-inner rounded-premium">
-                  <i class="bi bi-browser-firefox d-block fs-4 text-warning mb-1"></i>
-                  <span class="fw-bold small d-block">Firefox</span>
-                  <span class="text-muted small" style="font-size: 0.7rem;">14%</span>
+                <div class="col-4">
+                  <div class="text-center p-2 bg-glass-inner rounded-premium h-100">
+                    <i class="bi bi-browser-firefox d-block fs-5 text-warning mb-1"></i>
+                    <span class="fw-bold small d-block" style="font-size: 0.75rem;">Firefox</span>
+                    <span class="text-muted small" style="font-size: 0.65rem;">14%</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -315,7 +346,7 @@
 
   <!-- CTA section -->
   <section class="cta-section py-5 my-5 container">
-    <div class="card-premium p-5 text-center bg-gradient-card border-glow-purple">
+    <div class="card-premium p-4 p-md-5 text-center bg-gradient-card border-glow-purple">
       <h2 class="h1 font-heading text-white mb-3">Scale your audience outreach today</h2>
       <p class="text-white-50 max-width-600 mx-auto mb-4">
         Join users optimizing link workflows, generating custom code, and collecting deep analytics insights.
