@@ -70,7 +70,7 @@
               <!-- Short Link code/alias -->
               <td class="py-3 px-4">
                 <div class="d-flex align-items-center gap-2">
-                  <a href="http://localhost:3000/{{ url.shortCode }}" target="_blank" class="fw-bold text-primary text-decoration-none">
+                  <a [href]="baseUrl + '/' + url.shortCode" target="_blank" class="fw-bold text-primary text-decoration-none">
                     /{{ url.shortCode }}
                   </a>
                   <button (click)="copyLink(url.id, url.shortCode)" class="btn btn-sm btn-light p-1 border-0" title="Copy to Clipboard">

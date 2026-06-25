@@ -137,7 +137,7 @@
           <div class="mb-3">
             <span class="text-secondary" style="font-size: 0.8rem;">Shortened URL</span>
             <div class="input-group mt-1">
-              <input type="text" class="form-control bg-white" [value]="'http://localhost:3000/' + createdUrl.shortCode" readonly>
+              <input type="text" class="form-control bg-white" [value]="baseUrl + '/' + createdUrl.shortCode" readonly>
               <button class="btn btn-primary bg-gradient border-0" (click)="copyLink(createdUrl.shortCode)">
                 <i class="bi" [class.bi-clipboard]="!copied" [class.bi-check-lg]="copied"></i>
                 <span class="ms-1">{{ copied ? 'Copied' : 'Copy' }}</span>

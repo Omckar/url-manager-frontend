@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UrlService } from '../../core/services/url.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { DialogService } from '../../core/services/dialog.service';
+import { environment } from '../../../environments/environment';
 import { NgIf, NgFor, DecimalPipe, DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
@@ -22,6 +23,8 @@ export class UrlsComponent implements OnInit, OnDestroy {
   private urlService = inject(UrlService);
   private analyticsService = inject(AnalyticsService);
   private dialogService = inject(DialogService);
+
+  baseUrl = environment.baseUrl;
 
   @ViewChild('urlClicksCanvas') urlClicksCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -120,7 +123,7 @@ export class UrlsComponent implements OnInit, OnDestroy {
   }
 
   copyLink(urlId: number, shortCode: string): void {
-    const fullUrl = `http://localhost:3000/${shortCode}`;
+    const fullUrl = `${this.baseUrl}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl).then(() => {
       this.copiedId = urlId;
       setTimeout(() => (this.copiedId = null), 2000);
@@ -218,7 +221,7 @@ export class UrlsComponent implements OnInit, OnDestroy {
 
   // QR Code presentation modal trigger
   openQrModal(shortCode: string): void {
-    const fullUrl = `http://localhost:3000/${shortCode}`;
+    const fullUrl = `${this.baseUrl}/${shortCode}`;
     this.selectedQrCodeText = fullUrl;
     
     QRCode.toDataURL(fullUrl, { width: 300, margin: 2 })

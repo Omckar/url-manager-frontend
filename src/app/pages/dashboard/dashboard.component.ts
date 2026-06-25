@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { UrlService } from '../../core/services/url.service';
 import { DialogService } from '../../core/services/dialog.service';
+import { environment } from '../../../environments/environment';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
@@ -22,6 +23,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private analyticsService = inject(AnalyticsService);
   private urlService = inject(UrlService);
   private dialogService = inject(DialogService);
+
+  baseUrl = environment.baseUrl;
 
   @ViewChild('clicksChartCanvas') clicksChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('deviceChartCanvas') deviceChartCanvas!: ElementRef<HTMLCanvasElement>;
@@ -148,7 +151,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   copyLink(shortCode: string): void {
-    const fullUrl = `http://localhost:3000/${shortCode}`;
+    const fullUrl = `${this.baseUrl}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl).then(() => {
       this.copied = true;
       setTimeout(() => (this.copied = false), 2000);
@@ -156,7 +159,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   generateQrCode(shortCode: string): void {
-    const fullUrl = `http://localhost:3000/${shortCode}`;
+    const fullUrl = `${this.baseUrl}/${shortCode}`;
     QRCode.toDataURL(fullUrl, { width: 250, margin: 2 })
       .then((url) => {
         this.qrCodeUrl = url;
