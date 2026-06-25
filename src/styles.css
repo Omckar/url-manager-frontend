@@ -528,3 +528,11 @@ h1, h2, h3, h4, h5, h6, .brand-font {
     padding: 1.25rem !important;
   }
 }
+
+.hover-color-primary {
+  transition: var(--transition-smooth);
+}
+
+.hover-color-primary:hover {
+  color: var(--color-primary) !important;
+}
