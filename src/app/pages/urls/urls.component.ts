@@ -53,6 +53,7 @@ export class UrlsComponent implements OnInit, OnDestroy {
   selectedQrCodeText = '';
 
   // Analytics panel state
+  showPassword = false;
   analyticsUrl: any = null;
   analyticsLoading = false;
   private urlChartInstance: Chart | null = null;

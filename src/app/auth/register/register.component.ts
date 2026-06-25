@@ -24,6 +24,7 @@ export class RegisterComponent {
 
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   onSubmit(): void {
     if (this.registerForm.invalid) {

@@ -20,6 +20,7 @@ export class UnlockComponent implements OnInit {
   shortCode = '';
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   ngOnInit(): void {
     this.shortCode = this.route.snapshot.paramMap.get('shortCode') || '';

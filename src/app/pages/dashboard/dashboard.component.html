@@ -98,7 +98,25 @@
           <!-- Password Link -->
           <div class="col-12 col-md-6">
             <label for="urlPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Protect with Password (Optional)</label>
-            <input type="password" id="urlPassword" formControlName="password" class="form-control form-control-premium" placeholder="Unlocking password">
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock text-muted"></i></span>
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="urlPassword" 
+                formControlName="password" 
+                class="form-control form-control-premium border-start-0 border-end-0 ps-1" 
+                placeholder="Unlocking password"
+              >
+              <button 
+                type="button" 
+                class="input-group-text border-start-0 px-3 d-flex align-items-center justify-content-center" 
+                (click)="showPassword = !showPassword"
+                style="cursor: pointer; border-left: none !important;"
+                aria-label="Toggle password visibility"
+              >
+                <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+              </button>
+            </div>
           </div>
 
           <!-- Expiry Date Picker selection -->

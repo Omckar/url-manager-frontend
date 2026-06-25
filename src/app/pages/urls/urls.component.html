@@ -197,7 +197,25 @@
         <!-- Password protected -->
         <div class="mb-3">
           <label for="editPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.82rem;">Set New Password</label>
-          <input type="password" id="editPassword" formControlName="password" class="form-control form-control-premium" placeholder="Leave empty to keep current">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock text-muted"></i></span>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="editPassword" 
+              formControlName="password" 
+              class="form-control form-control-premium border-start-0 border-end-0 ps-1" 
+              placeholder="Leave empty to keep current"
+            >
+            <button 
+              type="button" 
+              class="input-group-text border-start-0 px-3 d-flex align-items-center justify-content-center" 
+              (click)="showPassword = !showPassword"
+              style="cursor: pointer; border-left: none !important;"
+              aria-label="Toggle password visibility"
+            >
+              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Status -->

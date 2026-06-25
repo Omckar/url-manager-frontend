@@ -26,6 +26,9 @@ export class ProfileComponent implements OnInit {
   profileError = '';
   passwordMessage = '';
   passwordError = '';
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   ngOnInit(): void {
     this.initForms();

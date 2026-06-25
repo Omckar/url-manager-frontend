@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   topLinks: any[] = [];
   isLoading = true;
   isSubmitting = false;
+  showPassword = false;
   
   // Quick URL creation success state
   createdUrl: any = null;

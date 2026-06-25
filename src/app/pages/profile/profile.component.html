@@ -65,7 +65,25 @@
             <!-- Current Password -->
             <div class="mb-3">
               <label for="currentPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Current Password</label>
-              <input type="password" id="currentPassword" formControlName="currentPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+              <div class="input-group">
+                <input 
+                  [type]="showCurrentPassword ? 'text' : 'password'" 
+                  id="currentPassword" 
+                  formControlName="currentPassword" 
+                  class="form-control form-control-premium border-end-0" 
+                  placeholder="••••••••" 
+                  [class.is-invalid]="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid"
+                >
+                <button 
+                  type="button" 
+                  class="input-group-text border-start-0 px-3 d-flex align-items-center justify-content-center" 
+                  (click)="showCurrentPassword = !showCurrentPassword"
+                  style="cursor: pointer; border-left: none !important;"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="bi" [class.bi-eye]="!showCurrentPassword" [class.bi-eye-slash]="showCurrentPassword"></i>
+                </button>
+              </div>
               <div *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
                 Current password is required
               </div>
@@ -74,7 +92,25 @@
             <!-- New Password -->
             <div class="mb-3">
               <label for="newPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">New Password</label>
-              <input type="password" id="newPassword" formControlName="newPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid">
+              <div class="input-group">
+                <input 
+                  [type]="showNewPassword ? 'text' : 'password'" 
+                  id="newPassword" 
+                  formControlName="newPassword" 
+                  class="form-control form-control-premium border-end-0" 
+                  placeholder="••••••••" 
+                  [class.is-invalid]="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid"
+                >
+                <button 
+                  type="button" 
+                  class="input-group-text border-start-0 px-3 d-flex align-items-center justify-content-center" 
+                  (click)="showNewPassword = !showNewPassword"
+                  style="cursor: pointer; border-left: none !important;"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="bi" [class.bi-eye]="!showNewPassword" [class.bi-eye-slash]="showNewPassword"></i>
+                </button>
+              </div>
               <div *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
                 <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
                 <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">New password must be at least 6 characters</span>
@@ -84,7 +120,25 @@
             <!-- Confirm Password -->
             <div class="mb-4">
               <label for="confirmPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Confirm New Password</label>
-              <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="(passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || passwordForm.errors?.['mismatch']">
+              <div class="input-group">
+                <input 
+                  [type]="showConfirmPassword ? 'text' : 'password'" 
+                  id="confirmPassword" 
+                  formControlName="confirmPassword" 
+                  class="form-control form-control-premium border-end-0" 
+                  placeholder="••••••••" 
+                  [class.is-invalid]="(passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || passwordForm.errors?.['mismatch']"
+                >
+                <button 
+                  type="button" 
+                  class="input-group-text border-start-0 px-3 d-flex align-items-center justify-content-center" 
+                  (click)="showConfirmPassword = !showConfirmPassword"
+                  style="cursor: pointer; border-left: none !important;"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+                </button>
+              </div>
               <div *ngIf="passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
                 Confirm password is required
               </div>
