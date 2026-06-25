@@ -514,3 +514,17 @@ h1, h2, h3, h4, h5, h6, .brand-font {
     width: 100%;
   }
 }
+
+/* Responsive adjustments for mobile/tablet viewports */
+@media (max-width: 767.98px) {
+  /* Ensure container content does not stick to screen edges due to negative row margins */
+  .container, .container-fluid {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  /* Scale down premium card padding on small viewports for balanced layout */
+  .card-premium, .card.card-premium {
+    padding: 1.25rem !important;
+  }
+}
