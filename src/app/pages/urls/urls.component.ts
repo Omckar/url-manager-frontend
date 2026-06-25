@@ -176,11 +176,13 @@ export class UrlsComponent implements OnInit, OnDestroy {
   openEditModal(url: any): void {
     this.activeUrl = url;
     
-    // Format expiration date to fit datetime-local input
+    // Format expiration date to fit datetime-local input (in local timezone)
     let formattedDate = '';
     if (url.expiryDate) {
       const d = new Date(url.expiryDate);
-      formattedDate = d.toISOString().slice(0, 16);
+      const offset = d.getTimezoneOffset();
+      const localDate = new Date(d.getTime() - (offset * 60 * 1000));
+      formattedDate = localDate.toISOString().slice(0, 16);
     }
 
     this.editForm.patchValue({
