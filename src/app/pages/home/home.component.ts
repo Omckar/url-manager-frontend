@@ -62,4 +62,23 @@ export class HomeComponent {
     urlInput.value = '';
     this.copied = false;
   }
+
+  scrollToSection(id: string): void {
+    const element = document.getElementById(id);
+    if (element) {
+      const yOffset = -76; // Offset by header height to prevent visual overlap
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    
+    // Auto-close mobile navbar collapse menu if open
+    const navbar = document.getElementById('landingNavbar');
+    if (navbar && navbar.classList.contains('show')) {
+      navbar.classList.remove('show');
+      const toggler = document.querySelector('.navbar-toggler-custom');
+      if (toggler) {
+        toggler.setAttribute('aria-expanded', 'false');
+      }
+    }
+  }
 }
