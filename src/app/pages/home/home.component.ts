@@ -42,7 +42,7 @@ export class HomeComponent {
     }
     const absHash = Math.abs(hash);
     const mockCode = absHash.toString(36).substring(0, 5).toUpperCase();
-    this.mockShortenedUrl = `https://url-mng.up.railway.app/${mockCode}`;
+    this.mockShortenedUrl = `https://urlmng.up.railway.app/${mockCode}`;
     this.showRegisterPrompt = true;
     this.copied = false;
   }
