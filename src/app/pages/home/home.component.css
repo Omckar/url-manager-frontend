@@ -567,3 +567,10 @@
     padding: 0.8rem 1.4rem !important;
   }
 }
+
+/* Native scroll margins for smooth navigation scrolling behind sticky header */
+#features,
+#showcase,
+#analytics {
+  scroll-margin-top: 86px;
+}

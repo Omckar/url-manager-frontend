@@ -66,9 +66,7 @@ export class HomeComponent {
   scrollToSection(id: string): void {
     const element = document.getElementById(id);
     if (element) {
-      const yOffset = -76; // Offset by header height to prevent visual overlap
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     // Auto-close mobile navbar collapse menu if open
