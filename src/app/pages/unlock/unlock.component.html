@@ -1,0 +1,34 @@
+<div class="d-flex align-items-center justify-content-center min-vh-100 px-3 py-5">
+  <div class="card card-premium shadow border-0 p-4 p-md-5 w-100 text-center animate-fade-in" style="max-width: 480px; background: rgba(255, 255, 255, 0.95);">
+    <div class="d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning rounded-circle mb-4" style="width: 80px; height: 80px; color: #d97706 !important; background-color: rgba(217, 119, 6, 0.1) !important;">
+      <i class="bi bi-shield-lock fs-1"></i>
+    </div>
+    
+    <h2 class="h3 fw-bold text-dark mb-1">Password Protected</h2>
+    <p class="text-muted mb-4">This link requires a password to access the destination URL</p>
+
+    <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center gap-2 border-0 rounded-3 py-2 px-3 mb-4" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <div style="font-size: 0.85rem;">{{ errorMessage }}</div>
+    </div>
+
+    <form [formGroup]="unlockForm" (ngSubmit)="onSubmit()">
+      <!-- Password field -->
+      <div class="mb-4 text-start">
+        <label for="unlockPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Enter Password</label>
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0 border-light"><i class="bi bi-lock text-muted"></i></span>
+          <input type="password" id="unlockPassword" formControlName="password" class="form-control form-control-premium border-start-0 ps-1" placeholder="••••••••" [class.is-invalid]="unlockForm.get('password')?.touched && unlockForm.get('password')?.invalid">
+        </div>
+        <div *ngIf="unlockForm.get('password')?.touched && unlockForm.get('password')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+          Password is required.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isLoading" class="btn btn-gradient w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
+        <span>Unlock & Redirect</span>
+      </button>
+    </form>
+  </div>
+</div>

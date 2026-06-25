@@ -1,0 +1,35 @@
+<div class="custom-dialog-backdrop" *ngIf="state.isOpen" (click)="onCancel()">
+  <div class="custom-dialog-card card-premium shadow-lg border border-light border-opacity-10" (click)="$event.stopPropagation()">
+    <!-- Header Icon based on variant -->
+    <div class="dialog-icon-container animate-icon" [ngClass]="state.variant">
+      <i class="bi animate-bounce" [ngClass]="{
+        'bi-info-circle-fill': state.variant === 'info',
+        'bi-check-circle-fill': state.variant === 'success',
+        'bi-exclamation-triangle-fill': state.variant === 'warning',
+        'bi-exclamation-octagon-fill': state.variant === 'danger'
+      }"></i>
+    </div>
+
+    <!-- Title and Message -->
+    <h3 class="dialog-title text-main text-center">{{ state.title }}</h3>
+    <p class="dialog-message text-muted text-center">{{ state.message }}</p>
+
+    <!-- Action Buttons -->
+    <div class="dialog-actions-container">
+      <button 
+        *ngIf="state.type === 'confirm'"
+        type="button" 
+        class="btn btn-dialog-cancel" 
+        (click)="onCancel()">
+        {{ state.cancelText }}
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-dialog-confirm" 
+        [ngClass]="state.variant"
+        (click)="onConfirm()">
+        {{ state.confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

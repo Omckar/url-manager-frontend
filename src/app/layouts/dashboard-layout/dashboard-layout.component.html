@@ -1,0 +1,104 @@
+<nav class="navbar navbar-expand-lg navbar-premium shadow-sm">
+  <div class="container py-1">
+    <!-- Brand Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/dashboard">
+      <div class="d-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 text-white" style="width: 36px; height: 36px; background: var(--primary-gradient) !important;">
+        <i class="bi bi-link-45deg fs-4"></i>
+      </div>
+      <span class="brand-font fs-4 tracking-tight">Snap<span class="text-primary" style="color: #6366f1 !important;">Link</span></span>
+    </a>
+    
+    <!-- Mobile Theme Toggle (Directly visible next to menu trigger) -->
+    <div class="d-flex align-items-center gap-2 ms-auto me-2 d-lg-none">
+      <button (click)="themeService.toggleTheme()" class="theme-toggle-btn text-white border-0" type="button" title="Toggle Theme" style="color: var(--text-main) !important; background: var(--color-primary-light); width: 36px; height: 36px;">
+        <i class="bi fs-5" [class.bi-sun-fill]="themeService.theme() === 'dark'" [class.bi-moon-stars-fill]="themeService.theme() === 'light'"></i>
+      </button>
+    </div>
+
+    <!-- Custom Hamburger Toggler -->
+    <button class="navbar-toggler-custom d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#dashboardNavbar" aria-controls="dashboardNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list fs-3"></i>
+    </button>
+    
+    <!-- Collapsible Menu -->
+    <div class="collapse navbar-collapse" id="dashboardNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 ms-lg-4">
+        <li class="nav-item">
+          <a class="nav-link nav-link-premium d-flex align-items-center gap-2" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" data-bs-toggle="collapse" data-bs-target="#dashboardNavbar.show">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-premium d-flex align-items-center gap-2" routerLink="/urls" routerLinkActive="active" data-bs-toggle="collapse" data-bs-target="#dashboardNavbar.show">
+            <i class="bi bi-link"></i>
+            <span>My Links</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="d-flex align-items-center gap-2 gap-sm-3 header-actions-container justify-content-lg-end">
+        <!-- Desktop Theme Toggle -->
+        <button (click)="themeService.toggleTheme()" class="theme-toggle-btn d-none d-lg-flex border-secondary border-opacity-50 text-white" type="button" title="Toggle Theme" style="color: var(--text-main) !important; border-color: var(--border-input) !important;">
+          <i class="bi fs-5" [class.bi-sun-fill]="themeService.theme() === 'dark'" [class.bi-moon-stars-fill]="themeService.theme() === 'light'"></i>
+        </button>
+
+        <!-- Desktop Profile Name & Email -->
+        <div class="text-end d-flex flex-column d-none d-lg-flex">
+          <span class="fw-semibold text-main fs-6" style="color: var(--text-main);">{{ getUserDisplayName() }}</span>
+          <span class="text-muted" style="font-size: 0.75rem; color: var(--text-muted);">{{ authService.currentUser()?.email }}</span>
+        </div>
+        
+        <!-- Desktop User Dropdown -->
+        <div class="dropdown d-none d-lg-block">
+          <button class="btn btn-outline-light rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-color: var(--border-input); background: var(--bg-input);" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-fill fs-5" style="color: var(--text-main);"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userMenu">
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-2" routerLink="/profile" style="color: var(--text-main);">
+                <i class="bi bi-person fs-5" style="color: var(--text-muted);"></i>
+                <span>Profile Settings</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider my-2" style="border-top-color: var(--border-card);"></li>
+            <li>
+              <button class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-2 text-danger" (click)="logout()">
+                <i class="bi bi-box-arrow-right fs-5"></i>
+                <span>Logout</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mobile Profile Card & Action Buttons -->
+        <div class="d-flex flex-column w-100 d-lg-none mt-3 border-top pt-3" style="border-color: var(--border-card) !important;">
+          <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3" style="background: var(--color-primary-light);">
+            <div class="bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: var(--primary-gradient) !important;">
+              <i class="bi bi-person-fill fs-4"></i>
+            </div>
+            <div class="d-flex flex-column text-start">
+              <span class="fw-bold text-main fs-6" style="color: var(--text-main);">{{ getUserDisplayName() }}</span>
+              <span class="text-muted" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">{{ authService.currentUser()?.email }}</span>
+            </div>
+          </div>
+          <div class="d-flex gap-2 w-100">
+            <a class="btn btn-outline-premium flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2" routerLink="/profile" data-bs-toggle="collapse" data-bs-target="#dashboardNavbar.show">
+              <i class="bi bi-person-gear"></i>
+              <span>Profile</span>
+            </a>
+            <button class="btn btn-danger py-2.5 d-flex align-items-center justify-content-center gap-2" style="flex: 1;" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4 animate-fade-in">
+  <router-outlet></router-outlet>
+</main>

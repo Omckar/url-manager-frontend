@@ -1,0 +1,265 @@
+<div class="row g-4 mb-4">
+  <div class="col-12 col-lg-8">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+      <div>
+        <h1 class="h2 text-dark font-heading mb-1">My Shortened Links</h1>
+        <p class="text-muted mb-0">Search, filter, edit, and analyze your links</p>
+      </div>
+    </div>
+
+    <!-- Search & Filters Toolbar -->
+    <div class="card card-premium border-0 p-3 shadow-sm mb-4">
+      <div class="row g-3">
+        <!-- Search bar -->
+        <div class="col-12 col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 border-light"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" (input)="onSearch($event)" [value]="searchQuery" class="form-control form-control-premium border-start-0 ps-1" placeholder="Search by original URL, code, or alias...">
+          </div>
+        </div>
+
+        <!-- Filter Status -->
+        <div class="col-6 col-md-3">
+          <select (change)="onFilterStatus($event)" class="form-select form-control-premium">
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="expired">Expired</option>
+            <option value="disabled">Disabled</option>
+            <option value="password_protected">Password Protected</option>
+          </select>
+        </div>
+
+        <!-- Sort parameter -->
+        <div class="col-6 col-md-4">
+          <select (change)="onSortBy($event)" class="form-select form-control-premium">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="most_clicked">Most Clicked</option>
+            <option value="alphabetical">Alphabetical</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table/List Card -->
+    <div class="card card-premium border-0 shadow">
+      <div *ngIf="isLoading" class="p-4">
+        <div class="skeleton skeleton-title" style="width: 30%"></div>
+        <div class="skeleton skeleton-text" *ngFor="let i of [1,2,3,4,5]"></div>
+      </div>
+
+      <div *ngIf="!isLoading && urlsList.length === 0" class="text-center py-5">
+        <i class="bi bi-link-45deg text-muted" style="font-size: 4rem;"></i>
+        <h3 class="h5 mt-3 mb-1 fw-bold text-dark">No Links Found</h3>
+        <p class="text-muted mb-0">Create your first short link from the dashboard!</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="!isLoading && urlsList.length > 0">
+        <table class="table table-hover align-middle mb-0" style="background: transparent;">
+          <thead class="table-light border-bottom border-light">
+            <tr>
+              <th scope="col" class="py-3 px-4 text-secondary text-uppercase fw-semibold" style="font-size: 0.75rem;">Short Link</th>
+              <th scope="col" class="py-3 text-secondary text-uppercase fw-semibold" style="font-size: 0.75rem;">Original Link</th>
+              <th scope="col" class="py-3 text-secondary text-uppercase fw-semibold text-center" style="font-size: 0.75rem;">Clicks</th>
+              <th scope="col" class="py-3 text-secondary text-uppercase fw-semibold text-center" style="font-size: 0.75rem;">Status</th>
+              <th scope="col" class="py-3 px-4 text-secondary text-uppercase fw-semibold text-end" style="font-size: 0.75rem;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let url of urlsList">
+              <!-- Short Link code/alias -->
+              <td class="py-3 px-4">
+                <div class="d-flex align-items-center gap-2">
+                  <a href="http://localhost:3000/{{ url.shortCode }}" target="_blank" class="fw-bold text-primary text-decoration-none">
+                    /{{ url.shortCode }}
+                  </a>
+                  <button (click)="copyLink(url.id, url.shortCode)" class="btn btn-sm btn-light p-1 border-0" title="Copy to Clipboard">
+                    <i class="bi" [class.bi-clipboard]="copiedId !== url.id" [class.bi-check-lg]="copiedId === url.id" [class.text-success]="copiedId === url.id"></i>
+                  </button>
+                </div>
+                <div class="text-muted mt-1" style="font-size: 0.75rem;" *ngIf="url.customAlias">
+                  Alias: {{ url.customAlias }}
+                </div>
+              </td>
+              
+              <!-- Original destination -->
+              <td class="py-3">
+                <div class="text-truncate" style="max-width: 250px;" [title]="url.longUrl">
+                  {{ url.longUrl }}
+                </div>
+                <div class="text-muted mt-1" style="font-size: 0.72rem;">
+                  Created: {{ url.createdAt | date:'shortDate' }}
+                </div>
+              </td>
+
+              <!-- Total clicks -->
+              <td class="py-3 text-center">
+                <span class="badge bg-light text-dark fw-bold border border-light py-2 px-3 rounded-pill">
+                  {{ url.clickCount }}
+                </span>
+              </td>
+
+              <!-- Status tags (active/expired/disabled/password) -->
+              <td class="py-3 text-center">
+                <div class="d-flex flex-column gap-1 align-items-center justify-content-center">
+                  <!-- Disabled status toggled -->
+                  <div class="form-check form-switch p-0 m-0 d-flex align-items-center justify-content-center gap-1" style="min-height: auto;">
+                    <input class="form-check-input ms-0 cursor-pointer" type="checkbox" role="switch" [checked]="url.isActive" (change)="toggleActive(url)" [title]="url.isActive ? 'Disable Link' : 'Enable Link'">
+                  </div>
+
+                  <!-- Expired / Protected markers -->
+                  <span class="badge bg-danger bg-opacity-10 text-danger" style="font-size: 0.7rem;" *ngIf="isExpired(url)">
+                    Expired
+                  </span>
+                  <span class="badge bg-warning bg-opacity-10 text-warning" style="font-size: 0.7rem; color: #d97706 !important;" *ngIf="url.passwordHash">
+                    <i class="bi bi-shield-lock-fill me-1"></i>Protected
+                  </span>
+                </div>
+              </td>
+
+              <!-- Quick action links -->
+              <td class="py-3 px-4 text-end">
+                <div class="d-flex align-items-center justify-content-end gap-1">
+                  <!-- Analytics button -->
+                  <button (click)="viewAnalytics(url)" class="btn btn-sm btn-outline-primary py-1 px-2 border-0" title="Analytics">
+                    <i class="bi bi-graph-up-arrow"></i>
+                  </button>
+
+                  <!-- QR Code button -->
+                  <button (click)="openQrModal(url.shortCode)" class="btn btn-sm btn-outline-secondary py-1 px-2 border-0" title="QR Code">
+                    <i class="bi bi-qr-code"></i>
+                  </button>
+
+                  <!-- Edit settings button -->
+                  <button (click)="openEditModal(url)" class="btn btn-sm btn-outline-info py-1 px-2 border-0" title="Edit Settings">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+
+                  <!-- Delete button -->
+                  <button (click)="deleteUrl(url.id)" class="btn btn-sm btn-outline-danger py-1 px-2 border-0" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="card-footer bg-white border-0 py-3 px-4 d-flex align-items-center justify-content-between flex-wrap gap-2" *ngIf="urlsList.length > 0">
+        <span class="text-muted" style="font-size: 0.85rem;">
+          Showing Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong>
+        </span>
+        
+        <nav aria-label="Page navigation" *ngIf="totalPages > 1">
+          <ul class="pagination pagination-sm mb-0 gap-1">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link rounded-3 border-light py-2 px-3 text-secondary" (click)="onPageChange(currentPage - 1)">Previous</button>
+            </li>
+            <li class="page-item" [class.active]="page === currentPage" *ngFor="let page of [].constructor(totalPages); let index = index">
+              <button class="page-link rounded-3 border-light py-2 px-3 fw-bold" (click)="onPageChange(index + 1)">{{ index + 1 }}</button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link rounded-3 border-light py-2 px-3 text-secondary" (click)="onPageChange(currentPage + 1)">Next</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right sidebar: dynamic Analytics / QR code view depending on triggers -->
+  <div class="col-12 col-lg-4 animate-fade-in" *ngIf="analyticsUrl || selectedQrCodeUrl || activeUrl">
+    <!-- 1. Edit URL settings Card -->
+    <div class="card card-premium border-0 p-4 shadow mb-4" *ngIf="activeUrl">
+      <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-light pb-2">
+        <h3 class="h5 fw-bold text-dark mb-0"><i class="bi bi-pencil-square text-primary me-2"></i>Link Settings</h3>
+        <button (click)="closeEditModal()" class="btn-close-custom" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <p class="text-muted text-truncate" style="font-size: 0.75rem;">Modifying: /{{ activeUrl.shortCode }}</p>
+
+      <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+        <!-- Custom Alias -->
+        <div class="mb-3">
+          <label for="editAlias" class="form-label text-secondary fw-semibold" style="font-size: 0.82rem;">Custom Alias</label>
+          <input type="text" id="editAlias" formControlName="customAlias" class="form-control form-control-premium" placeholder="new-alias">
+        </div>
+
+        <!-- Expiry Date -->
+        <div class="mb-3">
+          <label for="editExpiry" class="form-label text-secondary fw-semibold" style="font-size: 0.82rem;">Expiration Date</label>
+          <input type="datetime-local" id="editExpiry" formControlName="expiryDate" class="form-control form-control-premium">
+        </div>
+
+        <!-- Password protected -->
+        <div class="mb-3">
+          <label for="editPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.82rem;">Set New Password</label>
+          <input type="password" id="editPassword" formControlName="password" class="form-control form-control-premium" placeholder="Leave empty to keep current">
+        </div>
+
+        <!-- Status -->
+        <div class="mb-4 form-check form-switch">
+          <input class="form-check-input cursor-pointer" type="checkbox" id="editActive" formControlName="isActive">
+          <label class="form-check-label fw-semibold text-secondary" for="editActive" style="font-size: 0.85rem;">Active Status</label>
+        </div>
+
+        <button type="submit" [disabled]="editLoading" class="btn btn-gradient w-100 py-2">
+          <span *ngIf="editLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <span>Save Settings</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- 2. Single URL Analytics Detail panel -->
+    <div class="card card-premium border-0 p-4 shadow mb-4" *ngIf="analyticsUrl">
+      <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-light pb-2">
+        <h3 class="h5 fw-bold text-dark mb-0"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Link Analytics</h3>
+        <button (click)="closeAnalytics()" class="btn-close-custom" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <p class="text-muted text-truncate mb-2" style="font-size: 0.75rem;">Path: <strong>/{{ analyticsUrl.shortCode }}</strong></p>
+      
+      <div class="badge bg-primary bg-opacity-10 text-primary py-2 px-3 rounded-pill fw-bold mb-3 d-inline-block">
+        {{ analyticsUrl.clickCount }} Total Clicks
+      </div>
+
+      <div *ngIf="analyticsLoading" class="py-5 text-center">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <div [hidden]="analyticsLoading" class="animate-fade-in">
+        <div style="height: 250px; position: relative;" class="mb-3">
+          <canvas #urlClicksCanvas></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. QR Code display Card -->
+    <div class="card card-premium border-0 p-4 shadow text-center" *ngIf="selectedQrCodeUrl">
+      <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-light pb-2 text-start">
+        <h3 class="h5 fw-bold text-dark mb-0"><i class="bi bi-qr-code text-primary me-2"></i>QR Code</h3>
+        <button (click)="closeQrModal()" class="btn-close-custom" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-white rounded-3 d-inline-block shadow-sm border border-light mx-auto mb-4">
+        <img [src]="selectedQrCodeUrl" alt="QR Code" style="max-width: 200px; height: auto;">
+      </div>
+      
+      <div class="mb-4">
+        <span class="text-secondary d-block" style="font-size: 0.78rem;">Target URL:</span>
+        <div class="text-truncate text-dark fw-semibold px-2" style="font-size: 0.85rem;">{{ selectedQrCodeText }}</div>
+      </div>
+
+      <a [href]="selectedQrCodeUrl" [download]="'qr-code.png'" class="btn btn-gradient w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+        <i class="bi bi-download"></i>
+        <span>Download QR Code Image</span>
+      </a>
+    </div>
+  </div>
+</div>

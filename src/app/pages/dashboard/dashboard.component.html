@@ -1,0 +1,248 @@
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1 class="h2 text-dark font-heading mb-1">Overview Dashboard</h1>
+        <p class="text-muted mb-0">Create new links and monitor click metrics in real-time</p>
+      </div>
+      <button (click)="loadDashboardData()" class="btn btn-outline-premium d-flex align-items-center gap-2">
+        <i class="bi bi-arrow-clockwise"></i>
+        <span>Refresh Metrics</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Skeletons -->
+<div *ngIf="isLoading" class="row g-4 mb-4 animate-fade-in">
+  <div class="col-12 col-sm-6 col-xl-3" *ngFor="let i of [1,2,3,4]">
+    <div class="card card-premium border-0 p-4 shadow">
+      <div class="skeleton skeleton-text" style="width: 40%"></div>
+      <div class="skeleton skeleton-title" style="width: 70%; margin-top: 10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Counter Grid -->
+<div *ngIf="!isLoading && stats" class="row g-4 mb-4 animate-fade-in">
+  <!-- Total URLs -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card card-premium border-0 p-4 shadow d-flex flex-row align-items-center justify-content-between">
+      <div>
+        <span class="text-secondary fw-semibold" style="font-size: 0.85rem;">Total Links</span>
+        <h2 class="h1 fw-bold text-dark mt-1 mb-0">{{ stats.totalUrls }}</h2>
+      </div>
+      <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3"><i class="bi bi-link-45deg fs-2"></i></div>
+    </div>
+  </div>
+
+  <!-- Active URLs -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card card-premium border-0 p-4 shadow d-flex flex-row align-items-center justify-content-between">
+      <div>
+        <span class="text-secondary fw-semibold" style="font-size: 0.85rem;">Active Links</span>
+        <h2 class="h1 fw-bold text-success mt-1 mb-0">{{ stats.activeUrls }}</h2>
+      </div>
+      <div class="bg-success bg-opacity-10 text-success p-3 rounded-3"><i class="bi bi-check-circle fs-2"></i></div>
+    </div>
+  </div>
+
+  <!-- Expired URLs -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card card-premium border-0 p-4 shadow d-flex flex-row align-items-center justify-content-between">
+      <div>
+        <span class="text-secondary fw-semibold" style="font-size: 0.85rem;">Expired Links</span>
+        <h2 class="h1 fw-bold text-danger mt-1 mb-0">{{ stats.expiredUrls }}</h2>
+      </div>
+      <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-3"><i class="bi bi-calendar-x fs-2"></i></div>
+    </div>
+  </div>
+
+  <!-- Total Clicks -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card card-premium border-0 p-4 shadow d-flex flex-row align-items-center justify-content-between">
+      <div>
+        <span class="text-secondary fw-semibold" style="font-size: 0.85rem;">Total Clicks</span>
+        <h2 class="h1 fw-bold mt-1 mb-0" style="color: #7c3aed;">{{ stats.totalClicks | number }}</h2>
+      </div>
+      <div class="bg-opacity-10 p-3 rounded-3" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;"><i class="bi bi-graph-up-arrow fs-2"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Quick Create Link Card -->
+  <div class="col-12 col-lg-8">
+    <div class="card card-premium border-0 p-4 shadow mb-4">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-magic text-primary me-2"></i>Create Short Link</h3>
+      <form [formGroup]="quickCreateForm" (ngSubmit)="onSubmitQuickCreate()">
+        <div class="row g-3">
+          <!-- Long URL -->
+          <div class="col-12">
+            <label for="longUrl" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Destination URL</label>
+            <input type="text" id="longUrl" formControlName="longUrl" class="form-control form-control-premium" placeholder="https://example.com/very-long-url-path-details" [class.is-invalid]="quickCreateForm.get('longUrl')?.touched && quickCreateForm.get('longUrl')?.invalid">
+            <div *ngIf="quickCreateForm.get('longUrl')?.touched && quickCreateForm.get('longUrl')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+              Please provide a valid URL starting with http:// or https://
+            </div>
+          </div>
+
+          <!-- Custom Alias -->
+          <div class="col-12 col-md-6">
+            <label for="customAlias" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Custom Alias (Optional)</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted border-end-0" style="font-size: 0.85rem;">snap.lk/</span>
+              <input type="text" id="customAlias" formControlName="customAlias" class="form-control form-control-premium border-start-0 ps-1" placeholder="my-brand">
+            </div>
+          </div>
+
+          <!-- Password Link -->
+          <div class="col-12 col-md-6">
+            <label for="urlPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Protect with Password (Optional)</label>
+            <input type="password" id="urlPassword" formControlName="password" class="form-control form-control-premium" placeholder="Unlocking password">
+          </div>
+
+          <!-- Expiry Date Picker selection -->
+          <div class="col-12 col-md-6">
+            <label for="expiryOption" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Expiration policy</label>
+            <select id="expiryOption" formControlName="expiryOption" class="form-select form-control-premium">
+              <option value="never">Never Expire</option>
+              <option value="1day">1 Day</option>
+              <option value="7days">7 Days</option>
+              <option value="30days">30 Days</option>
+              <option value="custom">Custom Date</option>
+            </select>
+          </div>
+
+          <!-- Custom Expiry Date picker -->
+          <div class="col-12 col-md-6" *ngIf="quickCreateForm.get('expiryOption')?.value === 'custom'">
+            <label for="customExpiryDate" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Custom Date & Time</label>
+            <input type="datetime-local" id="customExpiryDate" formControlName="customExpiryDate" class="form-control form-control-premium">
+          </div>
+
+          <div class="col-12 text-end">
+            <button type="submit" [disabled]="isSubmitting" class="btn btn-gradient px-4">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <span>Generate Link</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Quick creation success presentation card -->
+    <div *ngIf="createdUrl" class="card border-0 p-4 shadow animate-fade-in mb-4" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%); border-left: 5px solid var(--color-primary) !important; border-radius: var(--border-radius-md);">
+      <h4 class="h5 fw-bold text-dark mb-3"><i class="bi bi-patch-check text-primary me-2"></i>Short Link Created!</h4>
+      <div class="row align-items-center g-3">
+        <div class="col-12 col-md-7">
+          <div class="mb-3">
+            <span class="text-secondary" style="font-size: 0.8rem;">Shortened URL</span>
+            <div class="input-group mt-1">
+              <input type="text" class="form-control bg-white" [value]="'http://localhost:3000/' + createdUrl.shortCode" readonly>
+              <button class="btn btn-primary bg-gradient border-0" (click)="copyLink(createdUrl.shortCode)">
+                <i class="bi" [class.bi-clipboard]="!copied" [class.bi-check-lg]="copied"></i>
+                <span class="ms-1">{{ copied ? 'Copied' : 'Copy' }}</span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <span class="text-secondary" style="font-size: 0.8rem;">Destination URL</span>
+            <div class="text-truncate text-dark fw-semibold mt-1" style="font-size: 0.9rem;">
+              {{ createdUrl.longUrl }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-5 text-center">
+          <div *ngIf="qrCodeUrl" class="d-inline-block p-2 bg-white rounded-3 shadow-sm border border-light">
+            <img [src]="qrCodeUrl" alt="QR Code" style="max-width: 120px; height: auto;">
+          </div>
+          <div class="mt-2">
+            <a [href]="qrCodeUrl" [download]="createdUrl.shortCode + '-qr.png'" class="btn btn-sm btn-outline-premium py-1 px-3">
+              <i class="bi bi-download me-1"></i>Download QR
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Line Chart - Clicks Over Time -->
+    <div class="card card-premium border-0 p-4 shadow mb-4">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-graph-up text-primary me-2"></i>Clicks Activity (Last 30 Days)</h3>
+      <div style="height: 300px; position: relative;">
+        <canvas #clicksChartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <!-- Top Links List -->
+    <div class="card card-premium border-0 p-4 shadow mb-4">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-trophy text-warning me-2"></i>Top Performing Links</h3>
+      <div *ngIf="topLinks.length === 0" class="text-center py-4">
+        <i class="bi bi-hourglass text-muted fs-2"></i>
+        <p class="text-muted mt-2 mb-0">No links logged yet.</p>
+      </div>
+      <div class="list-group list-group-flush" *ngIf="topLinks.length > 0">
+        <div class="list-group-item bg-transparent border-light py-3 px-0 d-flex align-items-center justify-content-between" *ngFor="let item of topLinks">
+          <div class="text-truncate me-3" style="max-width: 70%;">
+            <a [routerLink]="['/urls']" class="fw-bold text-primary text-decoration-none d-block text-truncate">
+              /{{ item.shortCode }}
+            </a>
+            <span class="text-muted text-truncate d-block" style="font-size: 0.75rem;">{{ item.longUrl }}</span>
+          </div>
+          <div class="badge bg-primary bg-opacity-10 text-primary py-2 px-3 rounded-pill fw-bold">
+            {{ item.clickCount }} clicks
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Feed -->
+    <div class="card card-premium border-0 p-4 shadow">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-activity text-danger me-2"></i>Recent Clicks Log</h3>
+      <div *ngIf="recentActivity.length === 0" class="text-center py-4">
+        <i class="bi bi-broadcast text-muted fs-2"></i>
+        <p class="text-muted mt-2 mb-0">No click history logged yet.</p>
+      </div>
+      <div class="list-group list-group-flush" *ngIf="recentActivity.length > 0">
+        <div class="list-group-item bg-transparent border-light py-3 px-0" *ngFor="let click of recentActivity">
+          <div class="d-flex align-items-start gap-2">
+            <div class="bg-light p-2 rounded-3 text-secondary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+              <i class="bi" [class.bi-laptop]="click.device === 'Desktop'" [class.bi-phone]="click.device === 'Mobile'" [class.bi-tablet]="click.device === 'Tablet'"></i>
+            </div>
+            <div class="flex-grow-1 text-truncate">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="fw-bold text-dark" style="font-size: 0.85rem;">/{{ click.url?.shortCode }}</span>
+                <span class="text-muted" style="font-size: 0.7rem;">{{ click.timestamp | date:'shortTime' }}</span>
+              </div>
+              <p class="text-muted mb-0 text-truncate" style="font-size: 0.75rem;">
+                {{ click.browser }} on {{ click.operatingSystem }} • {{ click.referrer }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Chart.js Segment Distribution row -->
+  <div class="col-12 col-md-6">
+    <div class="card card-premium border-0 p-4 shadow h-100">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-laptop text-primary me-2"></i>Device Split</h3>
+      <div style="height: 250px; position: relative;">
+        <canvas #deviceChartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-12 col-md-6">
+    <div class="card card-premium border-0 p-4 shadow h-100">
+      <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-browser-chrome text-primary me-2"></i>Browser Split</h3>
+      <div style="height: 250px; position: relative;">
+        <canvas #browserChartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="row g-4 justify-content-center">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="mb-4">
+      <h1 class="h2 text-dark font-heading">Settings</h1>
+      <p class="text-muted">Manage your account information and security credentials</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Edit Profile -->
+      <div class="col-12 col-md-6">
+        <div class="card card-premium h-100 border-0 p-4 shadow">
+          <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-gear text-primary me-2"></i>Account Details</h3>
+          
+          <div *ngIf="profileMessage" class="alert alert-success border-0 rounded-3 py-2 px-3 text-sm d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>{{ profileMessage }}</div>
+          </div>
+          
+          <div *ngIf="profileError" class="alert alert-danger border-0 rounded-3 py-2 px-3 text-sm d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div>{{ profileError }}</div>
+          </div>
+
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Email Address</label>
+              <input type="email" formControlName="email" class="form-control form-control-premium" readonly>
+              <span class="text-muted" style="font-size: 0.75rem;">Email address cannot be changed</span>
+            </div>
+
+            <!-- Name -->
+            <div class="mb-4">
+              <label for="profileName" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Full Name</label>
+              <input type="text" id="profileName" formControlName="name" class="form-control form-control-premium" placeholder="Your Name" [class.is-invalid]="profileForm.get('name')?.touched && profileForm.get('name')?.invalid">
+              <div *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+                Name is required
+              </div>
+            </div>
+
+            <button type="submit" [disabled]="profileLoading || profileForm.invalid" class="btn btn-gradient w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+              <span *ngIf="profileLoading" class="spinner-border spinner-border-sm" role="status"></span>
+              <span>Save Changes</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="col-12 col-md-6">
+        <div class="card card-premium h-100 border-0 p-4 shadow">
+          <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Change Password</h3>
+          
+          <div *ngIf="passwordMessage" class="alert alert-success border-0 rounded-3 py-2 px-3 text-sm d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>{{ passwordMessage }}</div>
+          </div>
+          
+          <div *ngIf="passwordError" class="alert alert-danger border-0 rounded-3 py-2 px-3 text-sm d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div>{{ passwordError }}</div>
+          </div>
+
+          <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+            <!-- Current Password -->
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Current Password</label>
+              <input type="password" id="currentPassword" formControlName="currentPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+              <div *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+                Current password is required
+              </div>
+            </div>
+
+            <!-- New Password -->
+            <div class="mb-3">
+              <label for="newPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">New Password</label>
+              <input type="password" id="newPassword" formControlName="newPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid">
+              <div *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+                <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
+                <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">New password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label text-secondary fw-semibold" style="font-size: 0.85rem;">Confirm New Password</label>
+              <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control form-control-premium" placeholder="••••••••" [class.is-invalid]="(passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || passwordForm.errors?.['mismatch']">
+              <div *ngIf="passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid" class="text-danger mt-1" style="font-size: 0.8rem;">
+                Confirm password is required
+              </div>
+              <div *ngIf="passwordForm.touched && passwordForm.errors?.['mismatch']" class="text-danger mt-1" style="font-size: 0.8rem;">
+                Passwords do not match
+              </div>
+            </div>
+
+            <button type="submit" [disabled]="passwordLoading || passwordForm.invalid" class="btn btn-gradient w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+              <span *ngIf="passwordLoading" class="spinner-border spinner-border-sm" role="status"></span>
+              <span>Update Password</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
