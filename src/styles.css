@@ -591,3 +591,32 @@ h1, h2, h3, h4, h5, h6, .brand-font {
 .hover-color-primary:hover {
   color: var(--color-primary) !important;
 }
+
+/* Global Footer & Creator badge styling */
+.footer-premium {
+  background: transparent;
+}
+
+.creator-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.2rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-card);
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: 1rem;
+  transition: var(--transition-smooth);
+}
+
+.creator-badge:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--card-shadow-hover);
+  border-color: rgba(99, 102, 241, 0.25);
+  background: var(--color-primary-light);
+}
